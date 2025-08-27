@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>G-Coin Glitcher - Poorvith T.A</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Share Tech Mono', monospace;
+  background: black;
+  color: #00f0ff;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  text-align: center;
+}
+
+body {
+  width: 100%;
+}
+
+h1 {
+  font-weight: 900;
+  font-size: 3rem;
+  margin: 20px 0 15px;
+  letter-spacing: 6px;
+  text-shadow: 0 0 8px #00fff7cc;
+  user-select: none;
+}
+
+#clickArea {
+  background: linear-gradient(135deg, #00ffffcc 0%, #00007cdd 100%);
+  width: 320px;
+  height: 95px;
+  border-radius: 28px;
+  box-shadow: 0 0 35px #00f0ff;
+  font-size: 2.3rem;
+  font-weight: 900;
+  color: #00215f;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  margin: 0 auto 15px;
+  transition: transform 0.1s ease, background 0.1s ease;
+}
+#clickArea:active {
+  transform: scale(0.96);
+  background: linear-gradient(135deg, #001644 0%, #00f9f9cc 100%);
+  color: #00ffff;
+  text-shadow: 0 0 20px #00ffffbb;
+}
+
+#stats {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #a0ffff;
+  letter-spacing: 1.4px;
+  margin-bottom: 15px;
+  white-space: nowrap;
+  max-width: 90vw;
+  margin-left: auto;
+  margin-right: auto;
+  user-select: none;
+}
+
+#upgrades {
+  max-width: 480px;
+  width: 95vw;
+  margin: 0 auto;
+  text-align: left;
+  overflow-y: auto;
+  height: 330px; /* height approx for 3 upgrades */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  flex-shrink: 0;
+  min-height: 0;
+  border: 1px solid #004b7a;
+  border-radius: 12px;
+  background: #001f2f;
+  box-shadow: 0 0 15px #00f0ff88 inset;
+}
+
+#upgrades::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll-prompt {
+  font-size: 1rem;
+  color: #18f0ffcc;
+  margin: 8px auto 20px;
+  max-width: 480px;
+  font-style: italic;
+  user-select: none;
+}
+
+.upgrade {
+  background: #002a4e;
+  border: 2px solid #00e5ff;
+  box-shadow: 0 0 14px #00ccff88;
+  border-radius: 20px;
+  padding: 16px 24px;
+  margin: 10px 12px;
+  cursor: pointer;
+  user-select: none;
+  font-family: 'Share Tech Mono', monospace;
+  transition: background-color 0.25s, box-shadow 0.25s;
+  color: #a9faff;
+}
+
+.upgrade:hover:not(.disabled) {
+  background: #004b7a;
+  box-shadow: 0 0 30px #00ffffcc;
+}
+
+.disabled {
+  cursor: not-allowed;
+  opacity: 0.35;
+  box-shadow: none !important;
+}
+
+.upgrade h3 {
+  margin: 0 0 6px 0;
+  font-size: 1.15rem;
+  color: #00d8ff;
+  text-shadow: 0 0 8px #00d8ffaa;
+  letter-spacing: 1px;
+}
+
+.upgrade p {
+  margin: 0 0 6px 0;
+  font-size: 0.95rem;
+  color: #8cefff;
+}
+
+.upgrade .cost {
+  font-weight: 900;
+  color: #18f0ff;
+  font-size: 1.1rem;
+  letter-spacing: 0.7px;
+}
+
+/* Main container fills available space so footer is pushed down */
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+footer {
+  flex-shrink: 0;
+  background-color: #0d1117;
+  padding: 2rem;
+  font-size: 0.9rem;
+  color: #ccc;
+  border-top: 2px solid #1f2a36;
+  width: calc(100% - 2cm);
+  margin: 1cm auto;
+  border-radius: 16px;
+  box-sizing: border-box;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+}
+
+footer a {
+  color: #72a4f2;
+  font-weight: bold;
+  text-decoration: none;
+  margin: 5px 0;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+</style>
+</head>
+<body>
+
+<h1>G-Coin Glitcher</h1>
+
+<main>
+  <div id="clickArea" tabindex="0" role="button" aria-label="Click to gain G-Coins">GLITCH ME!</div>
+
+  <div id="stats">
+    G-Coins: <span id="points">0</span> &nbsp;|&nbsp; Glitch Level: <span id="stimulation">0</span> &nbsp;|&nbsp; Upgrades Bought: <span id="upgradesCount">0</span>
+  </div>
+
+  <div id="upgrades"></div>
+  <div class="scroll-prompt">Scroll down to unlock more upgradables...</div>
+</main>
+
+<footer>
+  <p>Made with 💓 &amp; Care by 
+    <a href="https://youtube.com/@PoorvithsLife_Official" target="_blank" rel="noopener noreferrer">Poorvith T.A</a>
+  </p>
+
+  <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script>
+  <script>
+    kofiwidget2.init('Support me on Ko-fi', '#72a4f2', 'O5O81GPS1N');
+    kofiwidget2.draw();
+  </script>
+
+  <p>© 2025 Poorvith T.A • 
+    <a href="https://ig.me/m/i_am_poorvith" target="_blank" rel="noopener noreferrer">Contact Me</a>
+  </p>
+</footer>
+
+<script>
+  const clickSound = new Audio('https://freesound.org/data/previews/331/331912_3248244-lq.mp3');
+  const upgradeSound = new Audio('https://freesound.org/data/previews/220/220173_4101836-lq.mp3');
+
+  let points = 0;
+  let stimulation = 0;
+  let upgradesPurchased = 0;
+  let pointsPerClick = 1;
+  let autoClickers = 0;
+  let glitchEchoActive = false;
+  let clickCount = 0;
+  let autoClickerPower = 1;
+
+  const pointsEl = document.getElementById('points');
+  const stimulationEl = document.getElementById('stimulation');
+  const upgradesCountEl = document.getElementById('upgradesCount');
+  const clickArea = document.getElementById('clickArea');
+  const upgradesContainer = document.getElementById('upgrades');
+  const upgrades = [
+    { id: 'autoClicker', name: 'Glitch Bot', description: 'Auto-generates 1 G-Coin per second.', baseCost: 10, cost: 10, level: 0 },
+    { id: 'doubleClick', name: 'Double Glitch Power', description: 'Doubles G-Coins earned from clicks.', baseCost: 50, cost: 50, level: 0 },
+    { id: 'glitchBoost', name: 'Glitch Boost', description: 'Each click adds +1 extra G-Coin per level.', baseCost: 150, cost: 150, level: 0 },
+    { id: 'glitchChain', name: 'Glitch Chain', description: 'Every 10 clicks, gain bonus G-Coins equal to Glitch Chain level.', baseCost: 500, cost: 500, level: 0 },
+    { id: 'glitchEcho', name: 'Glitch Echo', description: 'Each click counts as two for chain bonuses.', baseCost: 900, cost: 900, level: 0 },
+    { id: 'glitchOverdrive', name: 'Glitch Overdrive', description: 'Triples G-Coins per click.', baseCost: 1200, cost: 1200, level: 0 },
+    { id: 'glitchRecycler', name: 'Glitch Recycler', description: 'Recycles every 5th click for bonus G-Coins.', baseCost: 900, cost: 900, level: 0 },
+    { id: 'glitchBackup', name: 'Glitch Backup', description: 'Saves 10% G-Coins every minute.', baseCost: 2000, cost: 2000, level: 0 },
+    { id: 'glitchSurge', name: 'Glitch Surge', description: 'Boosts auto-clickers +2 G-Coins/sec.', baseCost: 1800, cost: 1800, level: 0 },
+    { id: 'glitchMultiplier', name: 'Glitch Multiplier', description: 'Multiplies all G-Coin gains by 1.5.', baseCost: 2500, cost: 2500, level: 0 },
+    { id: 'glitchSplitter', name: 'Glitch Splitter', description: 'Splits clicks into 3, each counts separately.', baseCost: 3500, cost: 3500, level: 0 },
+    { id: 'glitchStorm', name: 'Glitch Storm', description: 'Every click gives random bonus 0-5 G-Coins.', baseCost: 4000, cost: 4000, level: 0 },
+    { id: 'glitchShield', name: 'Glitch Shield', description: 'Reduces click cooldown by 20%.', baseCost: 5000, cost: 5000, level: 0 },
+    { id: 'glitchRain', name: 'Glitch Rain', description: 'Occasional rain drops bonus G-Coins.', baseCost: 6000, cost: 6000, level: 0 },
+    { id: 'glitchFlux', name: 'Glitch Flux', description: 'Click value fluctuates randomly ±2.', baseCost: 7000, cost: 7000, level: 0 },
+    { id: 'glitchWarp', name: 'Glitch Warp', description: 'Clicks count double for 5 seconds every 30.', baseCost: 8000, cost: 8000, level: 0 },
+    { id: 'glitchHacker', name: 'Glitch Hacker', description: 'Steals G-Coins from auto-clickers.', baseCost: 9000, cost: 9000, level: 0 },
+    { id: 'glitchPulse', name: 'Glitch Pulse', description: 'Clicks cause pulse that gains extra G-Coins.', baseCost: 10000, cost: 10000, level: 0 },
+    { id: 'glitchFluxCapacitor', name: 'Flux Capacitor', description: 'Multiply auto clicker output x4.', baseCost: 11200, cost: 11200, level: 0 },
+    { id: 'glitchBreaker', name: 'Glitch Breaker', description: 'For every 100 G-Coins, gain 1% extra click bonus.', baseCost: 12500, cost: 12500, level: 0 },
+    { id: 'glitchHyperDrive', name: 'Hyper Drive', description: 'Click rate is doubled.', baseCost: 13000, cost: 13000, level: 0 },
+    { id: 'glitchQuantumPulse', name: 'Quantum Pulse', description: 'Randomly doubles all gains for 5 seconds.', baseCost: 14000, cost: 14000, level: 0 },
+    { id: 'glitchTimeDistort', name: 'Time Distortion', description: 'Reduces upgrade costs by 10%.', baseCost: 15000, cost: 15000, level: 0 },
+    { id: 'glitchEntropy', name: 'Glitch Entropy', description: 'Every click has a 10% chance to double.', baseCost: 16000, cost: 16000, level: 0 },
+    { id: 'glitchNanoBot', name: 'Nano Bot', description: 'Auto clickers gain +5 G-Coins per second.', baseCost: 17500, cost: 17500, level: 0 },
+    { id: 'glitchTimeWarp', name: 'Time Warp', description: 'Speeds up auto clickers by 50%.', baseCost: 19000, cost: 19000, level: 0 },
+    { id: 'glitchPhaseShift', name: 'Phase Shift', description: 'Clicks ignore penalties for 10 seconds.', baseCost: 20500, cost: 20500, level: 0 },
+    { id: 'glitchMindHack', name: 'Mind Hack', description: 'Increases G-Coins per click based on current score.', baseCost: 22000, cost: 22000, level: 0 },
+    { id: 'glitchNeuralNet', name: 'Neural Net', description: 'Automatically purchases cheapest upgrade every minute.', baseCost: 23500, cost: 23500, level: 0 },
+    { id: 'glitchSingularity', name: 'Singularity', description: 'Triples all G-Coin income for 10 seconds every 5 minutes.', baseCost: 25000, cost: 25000, level: 0 },
+    { id: 'glitchDarkMatter', name: 'Dark Matter', description: 'Adds random G-Coins on every 7th click.', baseCost: 27000, cost: 27000, level: 0 },
+    { id: 'glitchPhotonBurst', name: 'Photon Burst', description: 'Boosts click multiplier for 15 seconds after buying an upgrade.', baseCost: 29000, cost: 29000, level: 0 },
+    { id: 'glitchWarpDrive', name: 'Warp Drive', description: 'Doubles passive income for 15 seconds every upgrade purchase.', baseCost: 31000, cost: 31000, level: 0 },
+    { id: 'glitchCyberCore', name: 'Cyber Core', description: 'Reduces click cooldown by 30%.', baseCost: 33000, cost: 33000, level: 0 },
+    { id: 'glitchHoloDeck', name: 'Holo Deck', description: 'Simulates clicks when you are away.', baseCost: 35000, cost: 35000, level: 0 },
+    { id: 'glitchMindLink', name: 'Mind Link', description: 'Increases all click effects by 5%.', baseCost: 37000, cost: 37000, level: 0 },
+    { id: 'glitchSubroutine', name: 'Subroutine', description: 'Auto clickers activate twice per second.', baseCost: 39000, cost: 39000, level: 0 },
+    { id: 'glitchSupernova', name: 'Supernova', description: 'Increases click gains by 25% every 100 upgrades bought.', baseCost: 41000, cost: 41000, level: 0 },
+    { id: 'glitchGravityWell', name: 'Gravity Well', description: 'Slows down upgrade cost scaling by 10%.', baseCost: 43000, cost: 43000, level: 0 },
+    { id: 'glitchPulseWave', name: 'Pulse Wave', description: 'Grants bonus G-Coins based on chain length.', baseCost: 45000, cost: 45000, level: 0 },
+    { id: 'glitchZenith', name: 'Zenith', description: 'Greatly boosts all income for 30 seconds every 10 minutes.', baseCost: 47000, cost: 47000, level: 0 },
+    { id: 'glitchQuantumArray', name: 'Quantum Array', description: 'Creates automated clicks equal to chain bonus.', baseCost: 49000, cost: 49000, level: 0 },
+    { id: 'glitchRealityShift', name: 'Reality Shift', description: 'Randomly doubles or triples clicks once per minute.', baseCost: 51000, cost: 51000, level: 0 },
+    { id: 'glitchVoidFlux', name: 'Void Flux', description: 'Boosts double click effect by +1.', baseCost: 53000, cost: 53000, level: 0 },
+    { id: 'glitchMindOverMatter', name: 'Mind Over Matter', description: 'Earns bonus G-Coins equal to 1% of current points each click.', baseCost: 55000, cost: 55000, level: 0 },
+    { id: 'glitchPrime', name: 'Glitch Prime', description: 'Multiplies all gains by 5 on upgrade purchase.', baseCost: 60000, cost: 60000, level: 0 },
+    { id: 'glitchNeuralLink', name: 'Neural Link', description: 'Boosts auto clicker efficiency by 10%.', baseCost: 65000, cost: 65000, level: 0 },
+    { id: 'glitchSingularityCore', name: 'Singularity Core', description: 'All upgrades cost 5% less.', baseCost: 70000, cost: 70000, level: 0 },
+    { id: 'glitchOmega', name: 'Glitch Omega', description: 'Triples auto clicker output.', baseCost: 80000, cost: 80000, level: 0 },
+    { id: 'glitchHyperNova', name: 'Hyper Nova', description: 'Each click activates a mini chain explosion.', baseCost: 90000, cost: 90000, level: 0 },
+    { id: 'glitchDarkStar', name: 'Dark Star', description: 'Clicks generate dark energy that adds to G-Coins.', baseCost: 100000, cost: 100000, level: 0 }
+  ];
+
+
+  function renderUpgrades() {
+    upgradesContainer.innerHTML = '';
+    for (const u of upgrades) {
+      const div = document.createElement('div');
+      div.className = 'upgrade';
+      if(points < u.cost) div.classList.add('disabled');
+      div.id = 'upgrade-' + u.id;
+      div.innerHTML = `
+        <h3>${u.name} (Lv.${u.level})</h3>
+        <p>${u.description}</p>
+        <p>Cost: <span class="cost">${u.cost.toLocaleString()} G-Coins</span></p>
+      `;
+      div.onclick = () => buyUpgrade(u.id);
+      upgradesContainer.appendChild(div);
+    }
+  }
+
+  function buyUpgrade(id) {
+    const upgrade = upgrades.find(u => u.id === id);
+    if(!upgrade || points < upgrade.cost) return;
+
+    points -= upgrade.cost;
+    upgradesPurchased++;
+    upgrade.level++;
+    upgrade.cost = Math.floor(upgrade.baseCost * 1.25 ** upgrade.level);
+
+    if(id === 'autoClicker') autoClickers++;
+    if(id === 'doubleClick' || id === 'glitchBoost' || id === 'glitchOverdrive') updatePointsPerClick();
+    if(id === 'glitchEcho') glitchEchoActive = upgrade.level > 0;
+
+    upgradeSound.currentTime = 0;
+    upgradeSound.play();
+
+    updateDisplay();
+    renderUpgrades();
+  }
+
+  let baseClickValue = 1;
+
+  function updatePointsPerClick(){
+    let dbl = upgrades.find(u => u.id === "doubleClick").level;
+    let boost = upgrades.find(u => u.id === "glitchBoost").level;
+    let overdrive = upgrades.find(u => u.id === "glitchOverdrive").level;
+    pointsPerClick = baseClickValue + boost;
+    if(dbl) pointsPerClick *= 2;
+    if(overdrive) pointsPerClick *= 3;
+  }
+
+  clickArea.onclick = () => {
+    clickSound.currentTime = 0;
+    clickSound.play();
+
+    clickCount++;
+    let increment = pointsPerClick;
+
+    if(glitchEchoActive) increment *= 2;
+
+    // other bonus logic ...
+
+    points += increment;
+    stimulation += increment;
+
+    updateDisplay();
+    renderUpgrades();
+  };
+
+  function updateDisplay(){
+    pointsEl.textContent = points.toLocaleString();
+    stimulationEl.textContent = stimulation.toLocaleString();
+    upgradesCountEl.textContent = upgradesPurchased.toLocaleString();
+  }
+
+  function startAutoClickers(){
+    setInterval(() => {
+      if(autoClickers > 0){
+        let gain = autoClickers * (1 + (upgrades.find(u => u.id === 'glitchSurge')?.level || 0) * 2);
+        points += gain;
+        stimulation += gain;
+        updateDisplay();
+        renderUpgrades();
+      }
+    }, 1000);
+  }
+
+  renderUpgrades();
+  updateDisplay();
+  startAutoClickers();
+
+</script>
+</body>
+</html>
